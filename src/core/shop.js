@@ -6,9 +6,9 @@ import Payments from "./payments";
 export const shop = {};
 
 export const ShopPurchaseData = {
-  totalSTD: 0,
+  totalSTD: 999999999999999999999999999999999999,
   spentSTD: 0,
-  respecAvailable: false,
+  respecAvailable: true,
   lastRespec: "",
   unlockedCosmetics: [],
 
@@ -17,17 +17,20 @@ export const ShopPurchaseData = {
   },
 
   get isIAPEnabled() {
-    return Cloud.loggedIn && this.availableSTD >= 0 && player.IAP.enabled;
+    //return Cloud.loggedIn && this.availableSTD >= 0 && player.IAP.enabled;
+    return true;
   },
 
   // We also allow for respecs if it's been at least 3 days since the last one
   get timeUntilRespec() {
-    const msSinceLast = Date.now() - new Date(ShopPurchaseData.lastRespec).getTime();
-    return TimeSpan.fromMilliseconds(3 * 86400 * 1000 - msSinceLast);
+    //const msSinceLast = Date.now() - new Date(ShopPurchaseData.lastRespec).getTime();
+    //return TimeSpan.fromMilliseconds(3 * 86400 * 1000 - msSinceLast);
+    return 0;
   },
 
   get canRespec() {
-    return this.respecAvailable || this.timeUntilRespec.totalDays <= 0;
+    //return this.respecAvailable || this.timeUntilRespec.totalDays <= 0;
+    return true;
   },
 
   updateLocalSTD(newData) {
@@ -52,6 +55,7 @@ export const ShopPurchaseData = {
 
   // Reads STD props from the cloud and sets local cached values with the result
   async syncSTD(showNotification = true, fetchedData = undefined) {
+    /*
     if (!Cloud.loggedIn) return;
     let newSTDData;
     if (fetchedData) {
@@ -67,6 +71,7 @@ export const ShopPurchaseData = {
     }
     if (showNotification && newSTDData.totalSTD > 0) GameUI.notify.info("STD purchases successfully loaded!", 10000);
     this.updateLocalSTD(newSTDData);
+    */
   },
 
   respecRequest() {
@@ -78,6 +83,7 @@ export const ShopPurchaseData = {
   },
 
   async respecAll() {
+    /*
     if (!this.canRespec) {
       // This case only happens if the player is cheating and using the console to make the game think it has a respec
       // when on the backend they don't. Nevertheless, responsive UI rarely hurts
@@ -102,6 +108,8 @@ export const ShopPurchaseData = {
     else GameUI.notify.error("No purchases to respec!", 10000);
     this.updateLocalSTD(stdData.data);
   },
+  */
+  for (const key of Object.keys(GameDatabase.shopPurchases)) this[key] = 0;
 };
 
 // We track the local state of shop purchases here, so dynamically add all the keys which exist in the gameDB
